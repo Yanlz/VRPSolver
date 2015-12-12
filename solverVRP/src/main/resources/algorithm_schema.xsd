@@ -97,6 +97,8 @@
 			<xs:restriction base="xs:string">
 				<xs:enumeration value="selectBest"/>
 				<xs:enumeration value="selectRandomly"/>
+				<xs:enumeration value="selectPseudoBest"/>
+				
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:attribute>
