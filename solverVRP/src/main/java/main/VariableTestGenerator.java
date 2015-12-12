@@ -129,11 +129,11 @@ public class VariableTestGenerator {
 			if (strategy1.isVariable) {
 				strategy1.setVariableValue(value);
 				if (strategy1.getVariableName().equals("Probability"))
-					strategy2.probability = ((double) Math.round(Double.sum(1.0, -value)*10d) / 10d);			
+					strategy2.probability = ((double) Math.round((1.0 - value)*10d) / 10d);			
 			} else {
 				strategy2.setVariableValue(value);
 				if (strategy2.getVariableName().equals("Probability"))
-					strategy1.probability = ((double) Math.round(Double.sum(1.0, -value)*10d) / 10d);	
+					strategy1.probability = ((double) Math.round((1.0 - value)*10d) / 10d);	
 			}
 			xml+= addStrategyXml(strategy1, 1);
 			xml+= addStrategyXml(strategy2, 2);
