@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+
+<algorithm xmlns="http://www.w3schools.com"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com algorithm_schema.xsd">
+<iterations>1024</iterations>
+	<construction>
+		<insertion name="bestInsertion">
+			<considerFixedCosts weight="1.0">true</considerFixedCosts>
+		</insertion>
+	</construction>
+		<strategy>
+		<memory>5</memory>
+		<searchStrategies>
+	<searchStrategy name="clusterRuin1AndRecreate">
+				<selector name="selectBest"/>
+	  			<acceptor name="acceptNewRemoveWorst"/>
+				<modules>
+					<module name="ruin_and_recreate">
+						<ruin name="clusterRuin">
+							<share>0.7</share>
+						</ruin>
+						<insertion name="bestInsertion"/>
+					</module>
+				</modules>
+				<probability>0.5</probability>			</searchStrategy>
+	<searchStrategy name="radialRuin2AndRecreate">
+				<selector name="selectBest"/>
+	  			<acceptor name="acceptNewRemoveWorst"/>
+				<modules>
+					<module name="ruin_and_recreate">
+						<ruin name="radialRuin">
+							<share>0.2</share>
+						</ruin>
+						<insertion name="bestInsertion"/>
+					</module>
+				</modules>
+				<probability>0.5</probability>			</searchStrategy></searchStrategies>		
+	</strategy>
+</algorithm>
