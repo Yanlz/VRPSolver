@@ -39,6 +39,7 @@ import jsprit.core.algorithm.SearchStrategyModule;
 import jsprit.core.algorithm.VariablePlusFixedSolutionCostCalculatorFactory;
 import jsprit.core.algorithm.VehicleRoutingAlgorithm;
 import jsprit.core.algorithm.acceptor.AcceptNewRemoveFirst;
+import jsprit.core.algorithm.acceptor.EliteAcceptor;
 import jsprit.core.algorithm.acceptor.ExperimentalSchrimpfAcceptance;
 import jsprit.core.algorithm.acceptor.GreedyAcceptance;
 import jsprit.core.algorithm.acceptor.GreedyAcceptance_minVehFirst;
@@ -920,6 +921,11 @@ public class VehicleRoutingAlgorithms {
 			algorithmListeners.add(new PrioritizedVRAListener(Priority.LOW, schrimpf));
 			typedMap.put(acceptorKey, schrimpf);
 			return schrimpf;
+		}
+		if(acceptorName.equals("eliteAcceptor")){
+			EliteAcceptor elite = new EliteAcceptor(solutionMemory, strategyConfig.getDouble("acceptor.threshold"), strategyConfig.getInt("acceptor.elite"));
+			typedMap.put(acceptorKey, elite);
+			return elite;
 		} else {
 			throw new IllegalStateException("solution acceptor " + acceptorName + " is not known");
 		}
