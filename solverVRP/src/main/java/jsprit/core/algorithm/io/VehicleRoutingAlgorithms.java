@@ -61,6 +61,7 @@ import jsprit.core.algorithm.ruin.ClusterRuinStrategyFactory;
 import jsprit.core.algorithm.ruin.RadialRuinStrategyFactory;
 import jsprit.core.algorithm.ruin.RandomRuinStrategyFactory;
 import jsprit.core.algorithm.ruin.RuinStrategy;
+import jsprit.core.algorithm.ruin.SequentialRuinStrategyFactory;
 import jsprit.core.algorithm.ruin.distance.AvgServiceAndShipmentDistance;
 import jsprit.core.algorithm.ruin.distance.JobDistance;
 import jsprit.core.algorithm.selector.SelectBest;
@@ -922,8 +923,9 @@ public class VehicleRoutingAlgorithms {
 			typedMap.put(acceptorKey, schrimpf);
 			return schrimpf;
 		}
-		if(acceptorName.equals("eliteAcceptor")){
-			EliteAcceptor elite = new EliteAcceptor(solutionMemory, strategyConfig.getDouble("acceptor.threshold"), strategyConfig.getInt("acceptor.elite"));
+		if (acceptorName.equals("eliteAcceptor")) {
+			EliteAcceptor elite = new EliteAcceptor(solutionMemory, strategyConfig.getDouble("acceptor.threshold"),
+					strategyConfig.getInt("acceptor.elite"));
 			typedMap.put(acceptorKey, elite);
 			return elite;
 		} else {
@@ -965,6 +967,10 @@ public class VehicleRoutingAlgorithms {
 			} else if (ruin_name.equals("radialRuin")) {
 				JobDistance jobDistance = new AvgServiceAndShipmentDistance(vrp.getTransportCosts());
 				ruin = getRadialRuin(vrp, routeStates, definedClasses, ruinKey, shareToRuin, jobDistance);
+
+			} else if (ruin_name.equals("sequentialRuin")) {
+				JobDistance jobDistance = new AvgServiceAndShipmentDistance(vrp.getTransportCosts());
+				ruin = getSequentialRuin(vrp, routeStates, definedClasses, ruinKey, shareToRuin, jobDistance);
 			} else if (ruin_name.equals("clusterRuin")) {
 				JobDistance jobDistance = new AvgServiceAndShipmentDistance(vrp.getTransportCosts());
 				ruin = getClustersRuin(vrp, routeStates, definedClasses, ruinKey, shareToRuin, jobDistance);
@@ -1032,6 +1038,17 @@ public class VehicleRoutingAlgorithms {
 		RuinStrategy ruin = definedClasses.get(stratKey);
 		if (ruin == null) {
 			ruin = new RandomRuinStrategyFactory(shareToRuin).createStrategy(vrp);
+			definedClasses.put(stratKey, ruin);
+		}
+		return ruin;
+	}
+
+	private static RuinStrategy getSequentialRuin(final VehicleRoutingProblem vrp, final StateManager routeStates,
+			TypedMap definedClasses, ModKey modKey, double shareToRuin, JobDistance jobDistance) {
+		RuinStrategyKey stratKey = new RuinStrategyKey(modKey);
+		RuinStrategy ruin = definedClasses.get(stratKey);
+		if (ruin == null) {
+			ruin = new SequentialRuinStrategyFactory(shareToRuin, jobDistance).createStrategy(vrp);
 			definedClasses.put(stratKey, ruin);
 		}
 		return ruin;
