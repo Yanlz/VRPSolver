@@ -16,6 +16,7 @@ import jsprit.core.algorithm.io.VehicleRoutingAlgorithms;
 import jsprit.core.algorithm.selector.SelectBest;
 import jsprit.core.algorithm.termination.TimeTermination;
 import jsprit.core.problem.VehicleRoutingProblem;
+import jsprit.core.problem.VehicleRoutingProblem.FleetSize;
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
 import jsprit.core.reporting.SolutionPrinter;
 import jsprit.instance.reader.SolomonReader;
@@ -40,6 +41,7 @@ public class Main {
 			long startTime = System.currentTimeMillis();
 			// Create a vrp problem builder
 			VehicleRoutingProblem.Builder vrpBuilder = VehicleRoutingProblem.Builder.newInstance();
+			vrpBuilder.setFleetSize(FleetSize.FINITE);
 			// A solomonReader reads solomon-instance files, and stores the required information in the builder.
 			new SolomonReader(vrpBuilder).read("input/" + options.get(PARAMS.INSTANCE));
 			VehicleRoutingProblem vrp = vrpBuilder.build();

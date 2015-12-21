@@ -59,7 +59,7 @@ public final class FixedBestInsertion extends AbstractInsertionStrategy{
 
 	public FixedBestInsertion(JobInsertionCostsCalculator jobInsertionCalculator, VehicleRoutingProblem vehicleRoutingProblem) {
 		super(vehicleRoutingProblem);
-		routesNo = 10;
+		routesNo = 13;
 		bestInsertionCostCalculator = jobInsertionCalculator;
 		logger.debug("initialise {}", this);
 	}

@@ -41,7 +41,7 @@ class InsertionFactory {
 
 		if(config.containsKey("[@name]")){
 			String insertionName = config.getString("[@name]");
-			if(!insertionName.equals("bestInsertion") && !insertionName.equals("regretInsertion")){
+			if(!insertionName.equals("bestInsertion") && !insertionName.equals("regretInsertion") && !insertionName.equals("fixedBestInsertion")){
 				throw new IllegalStateException(insertionName + " is not supported. use either \"bestInsertion\" or \"regretInsertion\"");
 			}
 
@@ -104,6 +104,9 @@ class InsertionFactory {
 
             if(insertionName.equals("regretInsertion")){
                 iBuilder.setInsertionStrategy(InsertionBuilder.Strategy.REGRET);
+            }
+            else if(insertionName.equals("fixedBestInsertion")){
+                iBuilder.setInsertionStrategy(InsertionBuilder.Strategy.FIXEDBEST);
             }
 			return iBuilder.build();
 		}

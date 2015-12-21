@@ -96,7 +96,7 @@ public final class FixedBestInsertionConcurrent extends AbstractInsertionStrateg
 		this.nuOfBatches = nuOfBatches;
 		bestInsertionCostCalculator = jobInsertionCalculator;
 		completionService = new ExecutorCompletionService<Insertion>(executorService);
-		routesNo = 10;
+		routesNo = 13;
 		logger.debug("initialise {}", this);
 	}
 

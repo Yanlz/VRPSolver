@@ -6,7 +6,7 @@
 	<iterations>1024</iterations>
 	
 	<construction>
-		<insertion name="bestInsertion">
+		<insertion name="fixedBestInsertion">
 			<considerFixedCosts weight="1.0">true</considerFixedCosts>
 		</insertion>
 	</construction>
@@ -23,7 +23,7 @@
 						<ruin name="sequentialRuin">
 							<share>0.4</share>
 						</ruin>
-						<insertion name="regretInsertion"/>
+						<insertion name="fixedBestInsertion"/>
 					</module>
 				</modules>
 				<probability>0.6</probability>
@@ -40,7 +40,7 @@
 						<ruin name="clusterRuin">
 							<share>0.4</share>
 						</ruin>
-						<insertion name="regretInsertion"/>
+						<insertion name="fixedBestInsertion"/>
 					</module>
 				</modules>
 				<probability>0.4</probability> 

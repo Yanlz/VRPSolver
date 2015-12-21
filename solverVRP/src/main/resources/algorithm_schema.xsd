@@ -284,6 +284,7 @@
 				<xs:restriction base="xs:string">
 					<xs:enumeration value="bestInsertion" />
 					<xs:enumeration value="regretInsertion" />
+					<xs:enumeration value="fixedBestInsertion" />
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
