@@ -16,11 +16,11 @@
 		<searchStrategies>
 
 			<searchStrategy name="randomRuinAndRecreate">
-				<selector name="selectRandomly"/>
+				<selector name="selectBest"/>
 	  			<acceptor name="greedyAcceptance"/> 
 				<modules>
 					<module name="ruin_and_recreate">
-						<ruin name="randomRuin">
+						<ruin name="sequentialRuin">
 							<share>0.4</share>
 						</ruin>
 						<insertion name="regretInsertion"/>
@@ -30,7 +30,7 @@
 			</searchStrategy>
 			
 		 	<searchStrategy name="radialRuinAndRecreate">
-				<selector name="selectBest"/>
+				<selector name="selectPseudoBest"/>
 				<acceptor name="schrimpfAcceptance"> 
 				 	<alpha>0.9</alpha>  
   					<warmup>250</warmup> 
