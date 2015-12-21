@@ -110,6 +110,11 @@ public final class FixedBestInsertionConcurrent extends AbstractInsertionStrateg
 		List<Job> badJobs = new ArrayList<Job>(unassignedJobs.size());
 		List<Job> unassignedJobList = new ArrayList<Job>(unassignedJobs);
 		Collections.shuffle(unassignedJobList, random);
+		
+		while (vehicleRoutes.size() < routesNo) {
+			vehicleRoutes.add(VehicleRoute.emptyRoute());
+		}
+		
 		List<Batch> batches = distributeRoutes(vehicleRoutes,nuOfBatches);
 		for(final Job unassignedJob : unassignedJobList){
 			Insertion bestInsertion = null;
@@ -168,10 +173,6 @@ public final class FixedBestInsertionConcurrent extends AbstractInsertionStrateg
 	private List<Batch> distributeRoutes(Collection<VehicleRoute> vehicleRoutes, int nuOfBatches) {
 		List<Batch> batches = new ArrayList<Batch>();
 		for(int i=0;i<nuOfBatches;i++) batches.add(new Batch()); 
-		
-		while (vehicleRoutes.size() < routesNo) {
-			vehicleRoutes.add(VehicleRoute.emptyRoute());
-		}
 		
 		int count = 0;
 		for(VehicleRoute route : vehicleRoutes){
