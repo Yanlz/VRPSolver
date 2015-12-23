@@ -81,7 +81,8 @@ public final class FixedBestInsertionConcurrent extends AbstractInsertionStrateg
 
 	private int nuOfBatches;
 	
-	private int routesNo;
+	//set to 10 routes by default
+	private int routesNo = 10;
 
 	private ExecutorCompletionService<Insertion> completionService;
 
@@ -94,9 +95,15 @@ public final class FixedBestInsertionConcurrent extends AbstractInsertionStrateg
 		super(vehicleRoutingProblem);
 		this.insertionsListeners = new InsertionListeners();
 		this.nuOfBatches = nuOfBatches;
+		
+		// number of fixed routes is defined by the system property added with JVM parameter
+		// -Dfixedroutes=<number>
+		if(System.getProperty("fixedroutes") != null) {
+			routesNo = Integer.parseInt(System.getProperty("fixedroutes"));
+		}
+		
 		bestInsertionCostCalculator = jobInsertionCalculator;
 		completionService = new ExecutorCompletionService<Insertion>(executorService);
-		routesNo = 13;
 		logger.debug("initialise {}", this);
 	}
 
