@@ -59,6 +59,8 @@ public class ConstraintManager implements HardActivityConstraint, HardRouteConst
 	private boolean timeWindowConstraintsSet = false;
 
     private boolean skillconstraintSet = false;
+    
+    private boolean balancingconstraintSet = false;
 	
 	public ConstraintManager(VehicleRoutingProblem vrp, RouteAndActivityStateGetter stateManager) {
 		this.vrp = vrp;
@@ -121,6 +123,13 @@ public class ConstraintManager implements HardActivityConstraint, HardRouteConst
         }
     }
 	
+    
+    public void addBalancingConstraint() {
+        if (!balancingconstraintSet){
+            addConstraint(new SoftBalancingConstraint(stateManager));
+            balancingconstraintSet=true;
+        }
+    }
 //	public void add
 	
 	public void addConstraint(HardActivityConstraint actLevelConstraint, Priority priority){

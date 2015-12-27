@@ -28,6 +28,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.naming.spi.StateFactory;
+
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.logging.log4j.LogManager;
@@ -68,6 +70,7 @@ import jsprit.core.algorithm.selector.SelectBest;
 import jsprit.core.algorithm.selector.SelectPseudoBest;
 import jsprit.core.algorithm.selector.SelectRandomly;
 import jsprit.core.algorithm.selector.SolutionSelector;
+import jsprit.core.algorithm.state.InternalStates;
 import jsprit.core.algorithm.state.StateManager;
 import jsprit.core.algorithm.state.StateUpdater;
 import jsprit.core.algorithm.state.UpdateActivityTimes;
@@ -81,12 +84,14 @@ import jsprit.core.algorithm.termination.VariationCoefficientTermination;
 import jsprit.core.problem.VehicleRoutingProblem;
 import jsprit.core.problem.VehicleRoutingProblem.FleetSize;
 import jsprit.core.problem.constraint.ConstraintManager;
+import jsprit.core.problem.job.Job;
 import jsprit.core.problem.solution.SolutionCostCalculator;
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
 import jsprit.core.problem.solution.route.VehicleRoute;
 import jsprit.core.problem.solution.route.activity.End;
 import jsprit.core.problem.solution.route.activity.ReverseActivityVisitor;
 import jsprit.core.problem.solution.route.activity.TourActivity;
+import jsprit.core.problem.solution.route.activity.TourActivity.JobActivity;
 import jsprit.core.problem.vehicle.FiniteFleetManagerFactory;
 import jsprit.core.problem.vehicle.InfiniteFleetManagerFactory;
 import jsprit.core.problem.vehicle.Vehicle;
@@ -520,9 +525,56 @@ public class VehicleRoutingAlgorithms {
 		constraintManager.addTimeWindowConstraint();
 		constraintManager.addLoadConstraint();
 		constraintManager.addSkillsConstraint();
+		constraintManager.addBalancingConstraint();
+		
+		final RewardAndPenaltiesThroughSoftConstraints contrib = new RewardAndPenaltiesThroughSoftConstraints(vrp);
+		SolutionCostCalculator costCalculator = new SolutionCostCalculator() {
+			
+			@Override
+			public double getCosts(VehicleRoutingProblemSolution solution) {
+				double c = 0.0;
+                for(VehicleRoute r : solution.getRoutes()){
+					c += stateManager.getRouteState(r, InternalStates.COSTS, Double.class);
+					c += getFixedCosts(r.getVehicle());
+					c +=contrib.getCosts(r);
+				}
+                c += solution.getUnassignedJobs().size() * c * .1;
+				return c;
+			}
+			
 
-		return readAndCreateAlgorithm(vrp, config, nuOfThreads, null, stateManager, constraintManager, true);
+            private double getFixedCosts(Vehicle vehicle) {
+                if(vehicle == null) return 0.0;
+                if(vehicle.getType() == null) return 0.0;
+                return vehicle.getType().getVehicleCostParams().fix;
+            }
+			
+		};
+
+		return readAndCreateAlgorithm(vrp, config, nuOfThreads, costCalculator, stateManager, constraintManager, true);
 	}
+	
+	
+	static class RewardAndPenaltiesThroughSoftConstraints {
+		private VehicleRoutingProblem vrp;
+
+		public RewardAndPenaltiesThroughSoftConstraints(VehicleRoutingProblem vrp) {
+			super();
+			this.vrp = vrp;
+		}
+		
+		public double getCosts(VehicleRoute route) {
+			int routeSize = route.getTourActivities().jobSize();
+			double routeCost = ((routeSize+1)*routeSize)/2;
+			return routeCost;
+		}
+		
+		private Job getJob(String string) {
+			return vrp.getJobs().get(string);
+		}
+
+	}
+	
 
 	public static VehicleRoutingAlgorithm readAndCreateAlgorithm(final VehicleRoutingProblem vrp,
 			AlgorithmConfig config, int nuOfThreads, SolutionCostCalculator solutionCostCalculator,

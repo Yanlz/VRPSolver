@@ -10,6 +10,7 @@ import jsprit.core.algorithm.selector.SelectBest;
 import jsprit.core.algorithm.termination.TimeTermination;
 import jsprit.core.problem.VehicleRoutingProblem;
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
+import jsprit.core.util.RandomNumberGeneration;
 import jsprit.instance.reader.SolomonReader;
 import jsprit.util.Examples;
 import main.OROoptions.CONSTANTS;
@@ -27,13 +28,13 @@ public class AutomaticTrenting {
 		
 		File[] directoryListing = dir.listFiles();		
 		double startTesting = System.currentTimeMillis();
-		long averageTime = 0;
 		if (directoryListing != null) {
 			
-			int sheetNo = 0, shareNo = 0, fileNo = 0, testNo = 0;
+			int sheetNo = 0, shareNo = 0, fileNo = 0;
 			int sharesPerSheet = outputs.get(fileNo).getSharesPerSheet();
 			int sheetsPerFile = directoryListing.length / instanceFiles.size() / sharesPerSheet;
 			for (File child : directoryListing) {
+				RandomNumberGeneration.reset();
 				System.out.println(child.getName());
 				OROoptions options = new OROoptions(generator.getXMLFolder() + "/" + child.getName(),
 						instanceFiles.get(fileNo) + ".txt", generator.getRepetitions());		
@@ -59,12 +60,8 @@ public class AutomaticTrenting {
 					// Print solution on a file
 					outputs.get(fileNo).writeSheet(solution, eTime, sheetNo, r, shareNo);
 					
-					averageTime = (averageTime == 0)? eTime : (averageTime * testNo + eTime) / (testNo + 1);
-					long eta = averageTime * (directoryListing.length - testNo);
-					testNo++;
-					System.out.println("ETA " + (eta / 60000.0) + " minutes (" + (eta / 3600000.0) + " hours)");
 				}
-
+				
 				shareNo++;
 				sheetNo += shareNo / sharesPerSheet;
 				fileNo += sheetNo / sheetsPerFile;
