@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
+import jsprit.core.problem.solution.route.VehicleRoute;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellReference;
@@ -253,6 +254,10 @@ public class OutputSheet {
 		row.createCell(1).setCellValue(solution.getCost());
 		row.createCell(2).setCellValue(eTime / 1000.0);
 		row.createCell(3).setCellValue(solution.getRoutes().size());
+		
+		int i = 0;
+		for (VehicleRoute route: solution.getRoutes())
+			row.createCell(4 + (i++)).setCellValue(route.getTourActivities().getJobs().size());
 	}
 	
 	public void writeSingleSheet() {
