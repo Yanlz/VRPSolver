@@ -551,7 +551,7 @@ public class VehicleRoutingAlgorithms {
 			
 		};
 
-		return readAndCreateAlgorithm(vrp, config, nuOfThreads, costCalculator, stateManager, constraintManager, true);
+		return readAndCreateAlgorithm(vrp, config, nuOfThreads, null, stateManager, constraintManager, true);
 	}
 	
 	
