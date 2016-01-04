@@ -1,19 +1,3 @@
-/*******************************************************************************
- * Copyright (C) 2016  David Diye C. Van T. Treunti
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
- * version 3.0 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
 package jsprit.core.algorithm.recreate;
 
 import jsprit.core.algorithm.recreate.InsertionData.NoInsertionFound;
@@ -23,20 +7,12 @@ import jsprit.core.problem.driver.Driver;
 import jsprit.core.problem.job.Job;
 import jsprit.core.problem.solution.route.VehicleRoute;
 import jsprit.core.problem.vehicle.Vehicle;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.*;
-
-
-
-
-/**
- * 
- * @author David Diye C. Van T. Treunti
- * 
- */
 
 public final class FixedBestInsertionConcurrent extends AbstractInsertionStrategy{
 	
@@ -118,9 +94,8 @@ public final class FixedBestInsertionConcurrent extends AbstractInsertionStrateg
 		List<Job> unassignedJobList = new ArrayList<Job>(unassignedJobs);
 		Collections.shuffle(unassignedJobList, random);
 		
-		while (vehicleRoutes.size() < routesNo) {
+		while (vehicleRoutes.size() < routesNo)
 			vehicleRoutes.add(VehicleRoute.emptyRoute());
-		}
 		
 		List<Batch> batches = distributeRoutes(vehicleRoutes,nuOfBatches);
 		for(final Job unassignedJob : unassignedJobList){
@@ -154,7 +129,7 @@ public final class FixedBestInsertionConcurrent extends AbstractInsertionStrateg
 				logger.error("Exception", e);
 				System.exit(1);
 			}
-			
+
 			if(bestInsertion == null) badJobs.add(unassignedJob);
 			else insertJob(unassignedJob, bestInsertion.getInsertionData(), bestInsertion.getRoute());
 		}

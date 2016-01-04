@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutorService;
 public class InsertionBuilder {
 
     public enum Strategy {
-        REGRET, BEST, FIXEDBEST
+        REGRET, BEST, FIXEDBEST, FIRSTFIXEDBEST
     }
 
 	private VehicleRoutingProblem vrp;
@@ -182,6 +182,15 @@ public class InsertionBuilder {
                 insertion = new FixedBestInsertionConcurrent(costCalculator,executor,nuOfThreads,vrp);
             }
         }
+        else if(strategy.equals(Strategy.FIRSTFIXEDBEST)){
+            if (executor == null) {
+                insertion = new FirstFixedBestInsertion(costCalculator, vrp);
+            }
+            else {
+                insertion = new FirstFixedBestInsertion(costCalculator, vrp);
+            }
+        }
+        
         else throw new IllegalStateException("you should never get here");
         for(InsertionListener l : iListeners) insertion.addListener(l);
 		return insertion;

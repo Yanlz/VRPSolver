@@ -17,6 +17,7 @@
 package jsprit.core.algorithm.acceptor;
 
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
+import jsprit.core.problem.solution.route.VehicleRoute;
 
 import java.util.Collection;
 
@@ -44,19 +45,27 @@ public class GreedyAcceptance implements SolutionAcceptor{
 	@Override
 	public boolean acceptSolution(Collection<VehicleRoutingProblemSolution> solutions, VehicleRoutingProblemSolution newSolution) {
 		boolean solutionAccepted = false;
-		if (solutions.size() < solutionMemory) {
-			solutions.add(newSolution);
-			solutionAccepted = true;
-		} else {
-			VehicleRoutingProblemSolution worstSolution = null;
-			for (VehicleRoutingProblemSolution s : solutions) {
-				if (worstSolution == null) worstSolution = s;
-				else if (s.getCost() > worstSolution.getCost()) worstSolution = s;
-			}
-			if(newSolution.getCost() < worstSolution.getCost()){
-				solutions.remove(worstSolution);
+		int nRoutes = 0;
+		for (VehicleRoute route: newSolution.getRoutes()) {
+			if (!route.getTourActivities().getJobs().isEmpty())
+				nRoutes++;
+		}
+		if(System.getProperty("fixedroutes") == null || 
+				Integer.parseInt(System.getProperty("fixedroutes")) == nRoutes) {
+			if (solutions.size() < solutionMemory) {
 				solutions.add(newSolution);
 				solutionAccepted = true;
+			} else {
+				VehicleRoutingProblemSolution worstSolution = null;
+				for (VehicleRoutingProblemSolution s : solutions) {
+					if (worstSolution == null) worstSolution = s;
+					else if (s.getCost() > worstSolution.getCost()) worstSolution = s;
+				}
+				if(newSolution.getCost() < worstSolution.getCost()){
+					solutions.remove(worstSolution);
+					solutions.add(newSolution);
+					solutionAccepted = true;
+				}
 			}
 		}
 		return solutionAccepted;

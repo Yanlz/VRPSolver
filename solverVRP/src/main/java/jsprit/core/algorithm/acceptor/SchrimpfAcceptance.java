@@ -21,6 +21,8 @@ import jsprit.core.algorithm.listener.AlgorithmStartsListener;
 import jsprit.core.algorithm.listener.IterationStartsListener;
 import jsprit.core.problem.VehicleRoutingProblem;
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
+import jsprit.core.problem.solution.route.VehicleRoute;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -68,18 +70,18 @@ import java.util.Collection;
 public class SchrimpfAcceptance implements SolutionAcceptor, IterationStartsListener, AlgorithmStartsListener{
 
 	private static Logger logger = LogManager.getLogger(SchrimpfAcceptance.class.getName());
-	
+
 	private final double alpha;
-	
+
 	private int maxIterations = 1000;
-	
+
 	private int currentIteration = 0;
-	
+
 	private double initialThreshold = 0.0;
-	
+
 	private final int solutionMemory;
 
-	
+
 	public SchrimpfAcceptance(int solutionMemory, double alpha){
 		this.alpha = alpha;
 		this.solutionMemory = solutionMemory;
@@ -89,24 +91,32 @@ public class SchrimpfAcceptance implements SolutionAcceptor, IterationStartsList
 	@Override
 	public boolean acceptSolution(Collection<VehicleRoutingProblemSolution> solutions, VehicleRoutingProblemSolution newSolution) {
 		boolean solutionAccepted = false;
-		if (solutions.size() < solutionMemory) {
-			solutions.add(newSolution);
-			solutionAccepted = true;
-		} else {
-			VehicleRoutingProblemSolution worst = null;
-			double threshold = getThreshold(currentIteration);
-			for(VehicleRoutingProblemSolution solutionInMemory : solutions){
-				if(worst == null) worst = solutionInMemory;
-				else if(solutionInMemory.getCost() > worst.getCost()) worst = solutionInMemory;
-			}
-            if(worst == null){
-                solutions.add(newSolution);
-                solutionAccepted = true;
-            }
-			else if(newSolution.getCost() < worst.getCost() + threshold){
-				solutions.remove(worst);
+		int nRoutes = 0;
+		for (VehicleRoute route: newSolution.getRoutes()) {
+			if (!route.getTourActivities().getJobs().isEmpty())
+				nRoutes++;
+		}
+		if(System.getProperty("fixedroutes") == null || 
+				Integer.parseInt(System.getProperty("fixedroutes")) == nRoutes) {
+			if (solutions.size() < solutionMemory) {
 				solutions.add(newSolution);
 				solutionAccepted = true;
+			} else {
+				VehicleRoutingProblemSolution worst = null;
+				double threshold = getThreshold(currentIteration);
+				for(VehicleRoutingProblemSolution solutionInMemory : solutions){
+					if(worst == null) worst = solutionInMemory;
+					else if(solutionInMemory.getCost() > worst.getCost()) worst = solutionInMemory;
+				}
+				if(worst == null){
+					solutions.add(newSolution);
+					solutionAccepted = true;
+				}
+				else if(newSolution.getCost() < worst.getCost() + threshold){
+					solutions.remove(worst);
+					solutions.add(newSolution);
+					solutionAccepted = true;
+				}
 			}
 		}
 		return solutionAccepted;
