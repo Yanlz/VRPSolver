@@ -80,11 +80,18 @@ public class SchrimpfAcceptance implements SolutionAcceptor, IterationStartsList
 	private double initialThreshold = 0.0;
 
 	private final int solutionMemory;
+	
+	private int minRoutes = 0;
 
 
 	public SchrimpfAcceptance(int solutionMemory, double alpha){
 		this.alpha = alpha;
 		this.solutionMemory = solutionMemory;
+		
+		if(System.getProperty("fixedroutes") != null) {
+			minRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
+		}
+		
 		logger.debug("initialise {}", this);
 	}
 
@@ -96,8 +103,8 @@ public class SchrimpfAcceptance implements SolutionAcceptor, IterationStartsList
 			if (!route.getTourActivities().getJobs().isEmpty())
 				nRoutes++;
 		}
-		if(System.getProperty("fixedroutes") == null || 
-				Integer.parseInt(System.getProperty("fixedroutes")) == nRoutes) {
+		
+		if(minRoutes == 0 || minRoutes == nRoutes) {
 			if (solutions.size() < solutionMemory) {
 				solutions.add(newSolution);
 				solutionAccepted = true;

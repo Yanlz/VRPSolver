@@ -31,9 +31,14 @@ import java.util.Collection;
 public class GreedyAcceptance implements SolutionAcceptor{
 
 	private final int solutionMemory;
+	private int minRoutes = 0;
 	
 	public GreedyAcceptance(int solutionMemory){
 		this.solutionMemory = solutionMemory;
+		
+		if(System.getProperty("fixedroutes") != null) {
+			minRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
+		}
 	}
 	
 	/**
@@ -50,8 +55,8 @@ public class GreedyAcceptance implements SolutionAcceptor{
 			if (!route.getTourActivities().getJobs().isEmpty())
 				nRoutes++;
 		}
-		if(System.getProperty("fixedroutes") == null || 
-				Integer.parseInt(System.getProperty("fixedroutes")) == nRoutes) {
+		
+		if(minRoutes == 0 || minRoutes == nRoutes) {
 			if (solutions.size() < solutionMemory) {
 				solutions.add(newSolution);
 				solutionAccepted = true;
