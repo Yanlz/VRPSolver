@@ -526,30 +526,6 @@ public class VehicleRoutingAlgorithms {
 		constraintManager.addLoadConstraint();
 		constraintManager.addSkillsConstraint();
 		constraintManager.addBalancingConstraint();
-		
-		final RewardAndPenaltiesThroughSoftConstraints contrib = new RewardAndPenaltiesThroughSoftConstraints(vrp);
-		SolutionCostCalculator costCalculator = new SolutionCostCalculator() {
-			
-			@Override
-			public double getCosts(VehicleRoutingProblemSolution solution) {
-				double c = 0.0;
-                for(VehicleRoute r : solution.getRoutes()){
-					c += stateManager.getRouteState(r, InternalStates.COSTS, Double.class);
-					c += getFixedCosts(r.getVehicle());
-					c +=contrib.getCosts(r);
-				}
-                c += solution.getUnassignedJobs().size() * c * .1;
-				return c;
-			}
-			
-
-            private double getFixedCosts(Vehicle vehicle) {
-                if(vehicle == null) return 0.0;
-                if(vehicle.getType() == null) return 0.0;
-                return vehicle.getType().getVehicleCostParams().fix;
-            }
-			
-		};
 
 		return readAndCreateAlgorithm(vrp, config, nuOfThreads, null, stateManager, constraintManager, true);
 	}
