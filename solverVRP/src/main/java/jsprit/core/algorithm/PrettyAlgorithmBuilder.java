@@ -137,7 +137,23 @@ public class PrettyAlgorithmBuilder {
                 @Override
                 public void informAlgorithmStarts(VehicleRoutingProblem problem, VehicleRoutingAlgorithm algorithm, Collection<VehicleRoutingProblemSolution> solutions) {
                     if (solutions.isEmpty()) {
-                        solutions.add(new InsertionInitialSolutionFactory(iniInsertionStrategy, iniObjFunction).createSolution(vrp));
+                    	InsertionInitialSolutionFactory initSolFactory = new InsertionInitialSolutionFactory(iniInsertionStrategy, iniObjFunction);
+                    	VehicleRoutingProblemSolution sol;
+                    	
+                    	int noRoutes = 0;
+                    	if(System.getProperty("fixedroutes") != null) {
+                			noRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
+                		}
+                    	
+                    	System.out.println("minimum routes for initial solution: "+noRoutes);
+                    	
+                    	do {
+                    		 sol = initSolFactory.createSolution(vrp);
+                    		 System.out.println("proposed initial solution: routes "+sol.getRoutes().size()+" cost "+sol.getCost());
+                    	}
+                    	while(sol.getRoutes().size() < noRoutes);
+                    	
+                        solutions.add(sol);
                     }
                 }
             });

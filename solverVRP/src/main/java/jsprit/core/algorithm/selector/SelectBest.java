@@ -41,6 +41,9 @@ public class SelectBest implements SolutionSelector{
 		double minCost = Double.MAX_VALUE;
 		VehicleRoutingProblemSolution bestSolution = null;
 		for(VehicleRoutingProblemSolution sol : solutions){
+			if(System.getProperty("fixedroutes") != null && sol.getRoutes().size() < Integer.parseInt(System.getProperty("fixedroutes"))){
+				continue;
+			}
 			if(bestSolution == null){
 				bestSolution = sol;
 				minCost = sol.getCost();
