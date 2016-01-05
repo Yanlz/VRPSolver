@@ -39,6 +39,8 @@ public class EliteAcceptor implements SolutionAcceptor, IterationStartsListener 
 	
 	private final int solutionMemory;
 	
+	private int fixedRoutes = 0;
+	
 	private double variance;
 	
 	/**
@@ -52,6 +54,9 @@ public class EliteAcceptor implements SolutionAcceptor, IterationStartsListener 
 		this.varianceThreshold = varianceThreshold;
 		this.elite = elite;
 		logger.debug("initialize {}", this);
+		if (System.getProperty("fixedroutes") != null){
+			fixedRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
+		}
 	}
 	
 	/**
@@ -61,23 +66,24 @@ public class EliteAcceptor implements SolutionAcceptor, IterationStartsListener 
 	@Override
 	public boolean acceptSolution(Collection<VehicleRoutingProblemSolution> solutions, VehicleRoutingProblemSolution newSolution) {
 		boolean solutionAccepted = false;
-		
-		if (solutions.size() < solutionMemory) {
-			solutions.add(newSolution);
-			solutionAccepted = true;
-		} else {
-			VehicleRoutingProblemSolution worstSolution = null;
-			for (VehicleRoutingProblemSolution s : solutions) {
-				if (worstSolution == null) worstSolution = s;
-				else if (s.getCost() > worstSolution.getCost()) worstSolution = s;
-			}
-			if(newSolution.getCost() < worstSolution.getCost()){
-				solutions.remove(worstSolution);
+		if(fixedRoutes == 0 || fixedRoutes == newSolution.getRoutes().size()) {
+			if (solutions.size() < solutionMemory) {
 				solutions.add(newSolution);
 				solutionAccepted = true;
+			} else {
+				VehicleRoutingProblemSolution worstSolution = null;
+				for (VehicleRoutingProblemSolution s : solutions) {
+					if (worstSolution == null) worstSolution = s;
+					else if (s.getCost() > worstSolution.getCost()) worstSolution = s;
+				}
+				if(newSolution.getCost() < worstSolution.getCost()){
+					solutions.remove(worstSolution);
+					solutions.add(newSolution);
+					solutionAccepted = true;
+				}
 			}
 		}
-		
+
 		return solutionAccepted;
 	}
 

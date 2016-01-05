@@ -44,8 +44,18 @@ public class SelectRandomly implements SolutionSelector{
 	@Override
 	public VehicleRoutingProblemSolution selectSolution(Collection<VehicleRoutingProblemSolution> solutions) {
 		if(solutions.isEmpty()) return null;
+		int fixedRoutes = 0;
 		List<VehicleRoutingProblemSolution> solList = new ArrayList<VehicleRoutingProblemSolution>(solutions);
-		int randomIndex = random.nextInt(solutions.size());
+		
+		if (System.getProperty("fixedroutes") != null) {
+			fixedRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
+		}
+		
+		int randomIndex = 0;
+		do
+			randomIndex = random.nextInt(solutions.size());
+		while (solList.get(randomIndex).getRoutes().size() < fixedRoutes);
+		
 		return solList.get(randomIndex);
 	}
 

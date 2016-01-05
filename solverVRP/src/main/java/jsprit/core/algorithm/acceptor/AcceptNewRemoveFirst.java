@@ -17,7 +17,6 @@
 package jsprit.core.algorithm.acceptor;
 
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
-import jsprit.core.problem.solution.route.VehicleRoute;
 
 import java.util.Collection;
 
@@ -28,9 +27,13 @@ import java.util.Collection;
 public class AcceptNewRemoveFirst implements SolutionAcceptor{
 
 	private final int solutionMemory;
+	private int fixedRoutes = 0;
 	
 	public AcceptNewRemoveFirst(int solutionMemory){
 		this.solutionMemory = solutionMemory;
+		if (System.getProperty("fixedroutes") != null){
+			fixedRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
+		}
 	}
 	
 	/**
@@ -41,14 +44,7 @@ public class AcceptNewRemoveFirst implements SolutionAcceptor{
 	 */
 	@Override
 	public boolean acceptSolution(Collection<VehicleRoutingProblemSolution> solutions, VehicleRoutingProblemSolution newSolution) {
-		int nRoutes = 0;
-		for (VehicleRoute route: newSolution.getRoutes()) {
-			if (!route.getTourActivities().getJobs().isEmpty())
-				nRoutes++;
-		}
-		if (System.getProperty("fixedroutes") == null || 
-				Integer.parseInt(System.getProperty("fixedroutes")) == nRoutes) {
-
+		if(fixedRoutes == 0 || fixedRoutes == newSolution.getRoutes().size()) {
 			if (solutions.size() >= solutionMemory) {
 				solutions.remove(solutions.iterator().next());
 			}

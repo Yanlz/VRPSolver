@@ -21,7 +21,6 @@ import jsprit.core.algorithm.listener.AlgorithmStartsListener;
 import jsprit.core.algorithm.listener.IterationStartsListener;
 import jsprit.core.problem.VehicleRoutingProblem;
 import jsprit.core.problem.solution.VehicleRoutingProblemSolution;
-import jsprit.core.problem.solution.route.VehicleRoute;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,7 +80,7 @@ public class SchrimpfAcceptance implements SolutionAcceptor, IterationStartsList
 
 	private final int solutionMemory;
 	
-	private int minRoutes = 0;
+	private int fixedRoutes = 0;
 
 
 	public SchrimpfAcceptance(int solutionMemory, double alpha){
@@ -89,7 +88,7 @@ public class SchrimpfAcceptance implements SolutionAcceptor, IterationStartsList
 		this.solutionMemory = solutionMemory;
 		
 		if(System.getProperty("fixedroutes") != null) {
-			minRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
+			fixedRoutes = Integer.parseInt(System.getProperty("fixedroutes"));
 		}
 		
 		logger.debug("initialise {}", this);
@@ -98,13 +97,8 @@ public class SchrimpfAcceptance implements SolutionAcceptor, IterationStartsList
 	@Override
 	public boolean acceptSolution(Collection<VehicleRoutingProblemSolution> solutions, VehicleRoutingProblemSolution newSolution) {
 		boolean solutionAccepted = false;
-		int nRoutes = 0;
-		for (VehicleRoute route: newSolution.getRoutes()) {
-			if (!route.getTourActivities().getJobs().isEmpty())
-				nRoutes++;
-		}
 		
-		if(minRoutes == 0 || minRoutes == nRoutes) {
+		if(fixedRoutes == 0 || fixedRoutes == newSolution.getRoutes().size()) {
 			if (solutions.size() < solutionMemory) {
 				solutions.add(newSolution);
 				solutionAccepted = true;
