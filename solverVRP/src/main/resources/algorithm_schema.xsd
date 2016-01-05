@@ -286,6 +286,7 @@
 					<xs:enumeration value="regretInsertion" />
 					<xs:enumeration value="fixedBestInsertion" />
 					<xs:enumeration value="firstFixedBestInsertion" />
+					<xs:enumeration value="fixedRegretInsertion" />
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
