@@ -55,12 +55,12 @@ public class Main {
 			VehicleRoutingProblemSolution solution = new SelectBest().selectSolution(solutions);
 									
 			// Print solution on a file
-//			OROutils.write(solution, (String)options.get(PARAMS.INSTANCE), System.currentTimeMillis()-startTime, (String)options.get(CONSTANTS.OUTPUT));
-			sheet.addOneRepetition(solution, System.currentTimeMillis() - startTime, r);
+			OROutils.write(solution, (String)options.get(PARAMS.INSTANCE), System.currentTimeMillis()-startTime, (String)options.get(CONSTANTS.OUTPUT));
+//			sheet.addOneRepetition(solution, System.currentTimeMillis() - startTime, r);
 			// Print solution on the screen (optional)
 //			SolutionPrinter.print(vrp, solution, SolutionPrinter.Print.VERBOSE);
             // Draw solution on the screen (optional)
-			new GraphStreamViewer(vrp, solution).labelWith(Label.ID).setRenderDelay(10).display();
+//			new GraphStreamViewer(vrp, solution).labelWith(Label.ID).setRenderDelay(10).display();
 		}
 		sheet.writeSingleSheet();
 	}

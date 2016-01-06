@@ -3,7 +3,7 @@
 <algorithm xmlns="http://www.w3schools.com"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3schools.com algorithm_schema.xsd">
 
-	<iterations>1024</iterations>
+	<iterations>100000</iterations>
 	
 	<construction>
 		<insertion name="fixedBestInsertion">
@@ -12,39 +12,62 @@
 	</construction>
 	
 	<strategy>
-		<memory>5</memory>
+		<memory>1</memory>
 		<searchStrategies>
-
 			<searchStrategy name="randomRuinAndRecreate">
-				<selector name="selectBest"/>
-	  			<acceptor name="greedyAcceptance"/> 
+				<selector name="selectRandomly"/>
+	  			<acceptor name="schrimpfAcceptance">  
+ 					<alpha>0.1</alpha>  
+  					<warmup>250</warmup> 
+  				</acceptor>  
 				<modules>
 					<module name="ruin_and_recreate">
-						<ruin name="sequentialRuin">
+						<ruin name="randomRuin">
 							<share>0.4</share>
 						</ruin>
-						<insertion name="fixedBestInsertion"/>
+						<insertion name="fixedBestInsertion"/>						
 					</module>
+					
 				</modules>
-				<probability>0.6</probability>
+				<probability>0.33</probability>
 			</searchStrategy>
 			
-		 	<searchStrategy name="radialRuinAndRecreate">
-				<selector name="selectPseudoBest"/>
-				<acceptor name="schrimpfAcceptance"> 
-				 	<alpha>0.9</alpha>  
+			<searchStrategy name="randomRuinAndRecreate2">
+				<selector name="selectBest"/>
+	  			<acceptor name="schrimpfAcceptance">  
+ 					<alpha>0.1</alpha>  
   					<warmup>250</warmup> 
-  				</acceptor>
+  				</acceptor>  
 				<modules>
 					<module name="ruin_and_recreate">
-						<ruin name="clusterRuin">
-							<share>0.4</share>
+						<ruin name="randomRuin">
+							<share>0.5</share>
 						</ruin>
-						<insertion name="fixedBestInsertion"/>
+						<insertion name="fixedRegretInsertion"/>						
 					</module>
+					
 				</modules>
-				<probability>0.4</probability> 
+				<probability>0.33</probability>
 			</searchStrategy>
+			
+			<searchStrategy name="radialRuinAndRecreate">
+				<selector name="selectRandomly"/>
+				<acceptor name="schrimpfAcceptance">  
+ 					<alpha>0.1</alpha>  
+  					<warmup>250</warmup> 
+  				</acceptor> 
+				<modules>
+					<module name="ruin_and_recreate">
+						<ruin name="radialRuin">
+							<share>0.2</share>
+						</ruin>
+						<insertion name="fixedBestInsertion"/>					
+					</module>
+					
+				</modules>
+				<probability>0.34</probability>
+			</searchStrategy>
+			
 		</searchStrategies>		
 	</strategy>
 	
