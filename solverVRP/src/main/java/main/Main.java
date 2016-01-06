@@ -33,7 +33,7 @@ public class Main {
 		// Read input parameters
 		OROoptions options = new OROoptions(args);
 		
-		OutputSheet sheet = new OutputSheet(options.get(PARAMS.INSTANCE),(int)options.get(CONSTANTS.REPETITION));
+//		OutputSheet sheet = new OutputSheet(options.get(PARAMS.INSTANCE),(int)options.get(CONSTANTS.REPETITION));
 		
 		for(int r=0; r<(int)options.get(CONSTANTS.REPETITION); r++) {
 			// Time tracking
@@ -62,7 +62,7 @@ public class Main {
             // Draw solution on the screen (optional)
 //			new GraphStreamViewer(vrp, solution).labelWith(Label.ID).setRenderDelay(10).display();
 		}
-		sheet.writeSingleSheet();
+//		sheet.writeSingleSheet();
 	}
 	
 	private static void setTimeLimit(VehicleRoutingAlgorithm vra, long timeMilliSec) {
